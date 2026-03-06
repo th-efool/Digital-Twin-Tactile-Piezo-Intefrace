@@ -7,7 +7,7 @@ public class GridMaster : MonoBehaviour
 {
     public Material materialA;
     public Material materialB;
-
+    public UIDialogueScript DialogueGenerator;
 
     public GameObject gridObject;
     public GameObject robotObject;
@@ -138,6 +138,12 @@ public class GridMaster : MonoBehaviour
         if (!IsInMovableRange(targetIndex, currentRobotTile)) return false;
 
         MovePlayerTo(targetIndex);
+
+        if (DialogueGenerator != null && targetIndex == ((Length*Length)-1))
+        {
+            DialogueGenerator.ShowDialogueDelayed("I have cracked the correct sequence!!",3.0f, 9.0f);
+        }
+
         return true;
     }
 
