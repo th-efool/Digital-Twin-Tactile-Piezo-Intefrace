@@ -8,6 +8,7 @@ public class GridMaster : MonoBehaviour
     public Material materialA;
     public Material materialB;
 
+
     public GameObject gridObject;
     public GameObject robotObject;
     public float cellSize = 1f;
@@ -27,7 +28,9 @@ public class GridMaster : MonoBehaviour
     [SerializeField] private string walkingBoolName = "isWalking";
     private int walkingBoolHash;
 
-
+    public float moveDuration = 0.4f;
+    Coroutine moveRoutine;
+    [SerializeField] float spinsPerMove = 1f;   // number of full 360° turns per move
     void Awake()
     {
         Instance = this;
@@ -243,7 +246,10 @@ public class GridMaster : MonoBehaviour
         }
 
         grid = created.ToArray();
-        UpdatePositions();
+        moveDuration = moveDuration * 5f;
+        SetWalking(true);
+        MovePlayerTo(currentRobotTile);
+        moveDuration = moveDuration / 5f;
     }
 
     public void UpdatePositions()
@@ -282,9 +288,7 @@ public class GridMaster : MonoBehaviour
         }
     }
 
-    public float moveDuration = 0.4f;
-    Coroutine moveRoutine;
-    [SerializeField] float spinsPerMove = 1f;   // number of full 360° turns per move
+
 
     public void MovePlayerTo(int targetTile)
     {

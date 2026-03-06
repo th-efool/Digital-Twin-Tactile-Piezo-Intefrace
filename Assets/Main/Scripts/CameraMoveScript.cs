@@ -11,8 +11,17 @@ public class CameraMoveScript : MonoBehaviour
     [SerializeField] private float minPitch = -80f;
     [SerializeField] private float maxPitch = 80f;
 
+    [Header("Start Travel")]
+    [SerializeField] private float travelDistance = 5f;   // X
+    [SerializeField] private float travelDuration = 2f;   // Y
+
     private float pitch;
     private bool isLooking;
+
+    // Ease-in travel state
+    private Vector3 travelStartPosition;
+    private Vector3 travelEndPosition;
+    private float travelElapsed;
 
     void Start()
     {
@@ -20,13 +29,39 @@ public class CameraMoveScript : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
 
         pitch = transform.eulerAngles.x;
+
+        // Initialize ease-in backward travel
+        travelStartPosition = transform.position;
+        travelEndPosition = transform.position - transform.forward.normalized * travelDistance;
+        travelElapsed = 0f;
     }
 
     void Update()
     {
+        HandleStartTravel();
+
         UpdateLookState();
         HandleMouseLook();
         HandleMovement();
+    }
+
+    private void HandleStartTravel()
+    {
+        if (travelElapsed >= travelDuration)
+            return;
+
+        travelElapsed += Time.deltaTime;
+
+        float t = Mathf.Clamp01(travelElapsed / travelDuration);
+
+        // Ease-in (slow → fast)
+        float easedT = t * t;
+
+        transform.position = Vector3.Lerp(
+            travelStartPosition,
+            travelEndPosition,
+            easedT
+        );
     }
 
     private void UpdateLookState()

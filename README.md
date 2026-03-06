@@ -1,5 +1,4 @@
-
-# **TACTIX — Modular Soft-Tactile Grid Interface for Digital Twin Control**
+# Modular Piezo Grid Interface for Digital Twin Control
 
 ![Unity](https://img.shields.io/badge/Engine-Unity-black?logo=unity)
 ![Arduino](https://img.shields.io/badge/Hardware-Arduino-00979D?logo=arduino)
@@ -11,227 +10,239 @@
 ![Platform](https://img.shields.io/badge/Platform-Android%20%7C%20PC-informational)
 ![Status](https://img.shields.io/badge/Status-Prototype%20%2F%20Research-yellow)
 
+## Overview
+
+This project implements a **modular piezo-sensor tap interface** that maps a physical **n×n soft-input grid** to a **Unity-based Digital Twin**.
+Each tap on the physical piezo array is streamed into Unity and interpreted as a **discrete, intensity-aware control signal**, enabling structured interaction with a virtual robot.
+
+The system is designed for **robotic control, signal encoding, and human–machine interaction research**, including **Morse-style patterned inputs** and spatial command sequences.
+
+
+<p align="center">
+  <img 
+    src="https://github.com/th-efool/DigitalTwin-PizeoSensorARGridPilot/blob/main/Assets/p/WhatsApp%20Image%202025-12-30%20at%2009.56.45.jpeg?raw=true" 
+    width="100%" 
+  />
+</p>
+
+<table>
+  <tr>
+    <td align="center">
+      <img 
+        src="https://github.com/th-efool/DigitalTwin-PizeoSensorARGridPilot/blob/main/Assets/p/screenshot20251230095840.png?raw=true" 
+        width="100%"
+      />
+    </td>
+    <td align="center">
+      <img 
+        src="https://github.com/th-efool/DigitalTwin-PizeoSensorARGridPilot/blob/main/Assets/p/screenshot20251230095919.png?raw=true" 
+        width="100%"
+      />
+    </td>
+    <td align="center">
+      <img 
+        src="https://github.com/th-efool/DigitalTwin-PizeoSensorARGridPilot/blob/main/Assets/p/screenshot20251230095927.png?raw=true" 
+        width="100%"
+      />
+    </td>
+  </tr>
+</table>
+
 ---
 
-## **Overview**
+## Core Idea
 
-**TACTIX** is a **modular soft-tactile input system** that converts a physical **n×n piezoelectric grid** into a **spatial–temporal command language** for controlling a **Unity-based Digital Twin** in real time.
+Instead of treating input as a single binary trigger, this system treats **space + sequence + timing** as the input language.
 
-Each tap on the soft sensor surface is streamed into the runtime as a **deterministic, intensity-aware signal**, where **location, timing, and sequence** jointly encode operator intent. The Digital Twin interprets these signals as structured commands and executes them through a simulated robotic agent.
+* Each grid cell corresponds to a **logical command node**
+* Tap location selects intent
+* Tap sequences encode meaning
+* The Digital Twin visualizes and executes the command in real time
 
-The system is designed as a **research platform** for:
-
-* Human–machine interaction
-* Robotic command abstraction
-* Digital Twin validation
-* Soft-body electronic interfaces
-
-Rather than replacing traditional controllers, TACTIX explores **pre-UI control**—interaction paradigms that function without screens, speech, or complex mechanical input devices.
+This makes the interface scalable, expressive, and suitable for robotics experimentation.
 
 ---
 
-## **Core Concept**
-
-Conventional input systems collapse intent into isolated triggers (buttons, axes, gestures).
-TACTIX instead treats **space + sequence + timing** as the **primitive vocabulary** of control.
-
-* **Spatial position** selects intent
-* **Temporal patterns** encode meaning
-* **Tap intensity** provides modulation
-* **Sequences** form symbolic commands
-
-The result is an input surface that behaves less like a keypad and more like a **programmable tactile language**.
-
----
-
-## **High-Level Architecture**
+## System Architecture
 
 ```text
-Soft Tactile Piezo Grid (n×n)
+Physical Piezo Grid (n×n)
         │
         ▼
 Microcontroller (Arduino)
-  - Analog spike detection
-  - Thresholding & debouncing
+  - Piezo hit detection
   - Sensor index encoding
         │
         ▼
-Serial Transport (USB)
+Serial Communication (USB)
         │
         ▼
 Unity Runtime
-  - PiezoSerialReceiver (I/O bridge)
-  - GridMaster (logic + validation)
-  - Digital Twin Robot (execution)
+  - PiezoSerialReceiver
+  - GridMaster (logic + visualization)
+  - Digital Twin Robot
 ```
-
-The hardware layer remains intentionally minimal and deterministic. All semantic interpretation occurs in software, preserving transparency and debuggability.
 
 ---
+Arduino Integration (Piezo Grid → Unity)
 
-## **Hardware Integration (Piezo Grid → Runtime)**
+The physical input layer is implemented using an Arduino-based piezo sensor array, where each piezo element corresponds to a cell in the logical n×n grid used by the Digital Twin.
 
-The physical input layer consists of an Arduino-driven piezo sensor array, where each piezo element maps directly to a logical grid cell inside the Digital Twin.
+Hardware Role
 
-### **Hardware Responsibilities**
+Each piezo sensor is wired to a dedicated Arduino input channel
 
-* Each piezo sensor is connected to a dedicated analog input channel
-* Physical taps generate analog voltage spikes proportional to impact intensity
-* The microcontroller performs:
+A tap generates an analog spike whose magnitude reflects impact intensity
 
-  * Noise rejection
-  * Thresholding
-  * Debouncing
-* Valid taps are encoded as **integer grid indices** in the range:
+The Arduino performs thresholding and debouncing to detect valid taps
 
-```
-0 … (n × n − 1)
-```
+Each detected tap is mapped to a grid index in the range 0 … (n×n − 1)
 
-The microcontroller does **not** infer motion, intent, or behavior.
-It functions purely as a **deterministic signal encoder**, ensuring that higher-level interpretation remains explicit and reproducible.
+The Arduino does not attempt to interpret motion or behavior.
+It acts as a deterministic signal encoder, keeping the hardware simple and predictable.
 
----
+## Key Components
 
-## **Software Components**
+### 1. GridMaster (Core Logic)
 
-### **1. GridMaster — Control & Validation Core**
+Responsible for:
 
-The `GridMaster` acts as the authoritative logic layer for the Digital Twin.
+* Spawning an **n×n grid** dynamically
+* Computing grid positions with padding and scaling
+* Validating movement rules (adjacent / diagonal)
+* Driving robot movement and animation
+* Highlighting valid tiles and active targets
 
-**Responsibilities**
+Key features:
 
-* Dynamic spawning of an **n×n grid**
-* Spatial layout computation (padding, scale, offsets)
-* Validation of movement constraints (adjacent / diagonal)
-* Orchestration of robot movement and orientation
-* Visual state feedback for valid, invalid, and active tiles
-
-**Key Properties**
-
-* Parameterized grid size (`Length`)
+* Adjustable grid size (`Length`)
 * Configurable spacing and padding
-* Smooth interpolation with rotation alignment
-* Material-based visual feedback and pulse animation
-* Centralized access for hardware-driven input routing
+* Smooth robot interpolation with rotation alignment
+* Visual feedback through material switching and pulse animation
+* Singleton-based access for hardware input routing
 
 ---
 
-### **2. GridTile — Per-Cell Interaction Node**
+### 2. GridTile (Per-Cell Interaction)
 
-Each grid cell is represented by an autonomous `GridTile`.
+Each grid cell:
 
-Each tile:
+* Knows its index in the grid
+* Reports interaction back to `GridMaster`
+* Supports both **mouse/touch input** and **hardware-driven activation**
 
-* Stores its immutable grid index
-* Reports activation events to `GridMaster`
-* Supports both **software input** (mouse / touch) and **hardware input**
-
-This dual-path design enables:
+This allows:
 
 * Software-only testing
-* Hardware-in-the-loop experimentation
-* Seamless fallback between interaction modes
+* Hardware-in-the-loop control
+* Seamless fallback between input sources
 
 ---
 
-### **3. PiezoSerialReceiver — Physical–Digital Boundary**
+### 3. PiezoSerialReceiver (Hardware Bridge)
 
-The `PiezoSerialReceiver` forms the interface between physical sensing and digital control.
+Acts as the **physical → digital boundary**.
 
-**Responsibilities**
+Responsibilities:
 
-* Establishes serial communication with the microcontroller
-* Parses incoming sensor identifiers
-* Accepts multiple serial formats (e.g. `"2"`, `"SENSOR,2"`)
-* Validates indices against the active grid size
-* Dispatches real-time movement triggers to the Digital Twin
+* Connects to Arduino via Serial
+* Parses incoming sensor indices
+* Supports multiple serial formats (`"2"`, `"SENSOR,2"`)
+* Validates bounds against grid size
+* Triggers Digital Twin movement in real time
 
-**Design Constraints**
+Design goals:
 
-* Non-blocking serial reads
-* Robust handling of malformed or noisy input
-* Hardware-agnostic beyond index semantics
-
----
-
-### **4. AR Grid Placement (Optional Module)**
-
-For AR-enabled builds, the grid can be spatially anchored to the real world.
-
-Capabilities include:
-
-* Plane detection–based placement
-* Scale and rotation calibration
-* Explicit placement confirmation
-* Post-calibration plane suppression
-
-This allows **physical input surfaces**, **virtual grids**, and the **real environment** to align spatially.
+* Non-blocking reads
+* Robust against malformed input
+* Hardware-agnostic beyond index mapping
 
 ---
 
-### **5. Calibration & UI Layer**
+### 4. AR Grid Placement (Optional)
 
-The calibration layer provides:
+For AR-enabled builds:
 
-* Rotation controls
+* Places the grid onto detected planes using AR Foundation
+* Supports scale and rotation calibration
+* Locks placement once confirmed
+* Disables plane rendering after calibration
+
+This allows the **physical grid, virtual grid, and real world** to align spatially.
+
+---
+
+### 5. UI Calibration Layer
+
+Provides:
+
+* Rotation control
 * Scale adjustment
 * Placement confirmation
-* Clean transition into a locked interaction state
+* Clean lock-in state after calibration
 
-Calibration is deliberately isolated from interaction logic to preserve system clarity.
+Keeps calibration separate from interaction logic.
 
 ---
 
-## **Interaction Model**
+## Interaction Model
 
-1. A physical tap occurs on the piezo grid
-2. The tap is encoded as a grid index
-3. The index maps to a logical position
-4. Movement rules enforce local constraints
-5. The Digital Twin animates the transition
-6. Visual feedback confirms system state
+* A tap on a piezo sensor → mapped to a grid index
+* The grid index selects a logical position
+* Movement rules enforce local adjacency
+* The robot animates smoothly to the new tile
+* Visual feedback confirms valid and invalid moves
 
-Because the input is symbolic rather than continuous, the same structure naturally extends to:
+This structure allows extension into:
 
-* Tap-timing patterns
 * Gesture sequences
-* Morse-like encodings
-* Multi-step command execution
+* Tap-timing patterns
+* Morse-like symbolic encoding
+* Multi-step robotic commands
 
 ---
 
-## **Why This System Matters**
+## Why This Matters
 
-TACTIX is **not** a UI experiment.
+This is **not just a UI grid**.
 
 It is:
 
-* A **soft-tactile input language**
+* A **soft tactile input language**
 * A bridge between **physical sensing** and **virtual embodiment**
-* A control abstraction suitable for **robotics and Digital Twins**
-* A testbed for interpretable human–machine interaction
+* A foundation for **robot control abstractions**
+* A testbed for **Digital Twin interaction design**
 
-The grid scales, the encoding deepens, and the system remains **explicit, inspectable, and extensible**.
-
----
-
-## **Extension Pathways**
-
-* Tap intensity → velocity or command priority
-* Sequence buffers for symbolic macros
-* Multi-agent Digital Twin routing
-* Tile-triggered inverse kinematics
-* Learning-based gesture classification
-* Network-synchronized Digital Twin instances
+The grid scales naturally, the encoding grows richer with time, and the system remains interpretable.
 
 ---
 
-## **Intended Applications**
+## Extension Ideas
 
-* Robotics research and prototyping
-* Human–machine interaction studies
-* Digital Twin control validation
-* Educational robotics platforms
-* AR-assisted physical control interfaces
+* Tap intensity → velocity / priority
+* Sequence buffers for symbolic commands
+* Multi-robot routing
+* Inverse kinematics triggers per tile
+* Learning-based gesture recognition
+* Networked Digital Twin synchronization
 
+---
+
+## Intended Use Cases
+
+* Robotics research & prototyping
+* Human–machine interaction experiments
+* Digital Twin control systems
+* Educational robotics interfaces
+* AR-assisted physical control panels
+
+---
+
+If you want, I can also:
+
+* add **a minimal wiring + Arduino sketch section**
+* write a **Morse / pattern encoding spec**
+* convert this into a **paper-style system description**
+* or refactor the code into **clean subsystems**
+
+Just say the direction.

@@ -271,7 +271,7 @@ MonoBehaviour:
   gridObject: {fileID: 4170143123400485615, guid: 7be2c88bcccdd094db0f6f5f97f9b354, type: 3}
   robotObject: {fileID: 479762719867837858}
   cellSize: 0.6
-  padding: 0.3
+  padding: 0.5
   Length: 4
   currentRobotTile: 0
   highlightDelay: 0.7
@@ -279,6 +279,9 @@ MonoBehaviour:
   walkingBoolName: Walk_Anim
   moveDuration: 2.8
   spinsPerMove: 0
+  ScaleAnim_sineStartingPoint: 1.04
+  ScaleAnim_sineAmplifier: 0.12
+  ScaleAnim_sinefrequency: 8
 --- !u!1 &9023618667468452298
 GameObject:
   m_ObjectHideFlags: 0
