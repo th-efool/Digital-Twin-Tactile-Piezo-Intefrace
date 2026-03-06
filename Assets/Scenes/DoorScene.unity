@@ -1134,11 +1134,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   audioSource: {fileID: 1163166822}
   dialogueAudioClips:
-  - {fileID: 8300000, guid: 28315eea063ff6b4ea3225e58c9e388c, type: 3}
-  - {fileID: 8300000, guid: 9d5739a9048e4634da70524ab50b6af2, type: 3}
-  - {fileID: 8300000, guid: 18d57f47d3e026b40b7efab7ebb17943, type: 3}
-  - {fileID: 8300000, guid: 5d9099fca1c5c1e44b68f7dda75e28aa, type: 3}
-  - {fileID: 8300000, guid: b6ef1b5354779644dba67fbf32ceec20, type: 3}
+  - {fileID: 8300000, guid: 53a0e1e41aa0d354088d1edadc56b04e, type: 3}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 8300000, guid: 2ed2a201620b0ae4f8b5c112139355c2, type: 3}
   dialogueTimeline:
   - triggerTimeSeconds: 4
     messageText: Oh Wow
@@ -1148,11 +1149,11 @@ MonoBehaviour:
     visibleDuration: 3
   - triggerTimeSeconds: 9
     messageText: To escape the grid
-    visibleDuration: 2.5
-  - triggerTimeSeconds: 11.5
+    visibleDuration: 2
+  - triggerTimeSeconds: 11
     messageText: I need to find the correct sequence
     visibleDuration: 2.5
-  - triggerTimeSeconds: 14
+  - triggerTimeSeconds: 14.5
     messageText: Let's Begin!!!!!
     visibleDuration: 2
   textContainer: {fileID: 1512370779}
@@ -2727,7 +2728,7 @@ Transform:
   m_GameObject: {fileID: 1163166821}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -37.2977, y: 0, z: -7.3389}
+  m_LocalPosition: {x: -6.586, y: 1.541, z: 5.83}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

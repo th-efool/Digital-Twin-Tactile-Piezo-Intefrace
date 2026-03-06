@@ -141,7 +141,7 @@ public class GridMaster : MonoBehaviour
 
         if (DialogueGenerator != null && targetIndex == ((Length*Length)-1))
         {
-            DialogueGenerator.ShowDialogueDelayed("I have cracked the correct sequence!!",3.0f, 9.0f);
+            DialogueGenerator.ShowDialogueDelayed("That’s it—I cracked the grid sequence!", 3.0f, 9.0f);
         }
 
         return true;
