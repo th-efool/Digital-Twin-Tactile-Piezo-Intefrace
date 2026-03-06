@@ -5,6 +5,15 @@ using TMPro;
 
 public class UIDialogueScript : MonoBehaviour
 {
+
+    [Header("Dialogue Audio")]
+    [SerializeField]
+    private AudioSource audioSource;
+
+    [SerializeField]
+    private List<AudioClip> dialogueAudioClips = new List<AudioClip>();
+
+    private int nextAudioIndex = 0;
     [System.Serializable]
     public struct TimedDialogueEntry
     {
@@ -83,6 +92,7 @@ public class UIDialogueScript : MonoBehaviour
             messageText = messageText,
             visibleDuration = visibleDuration
         };
+        PlayNextAudio();
 
         activeDialogueRoutine = StartCoroutine(ShowDialogueRoutine(entry));
     }
@@ -93,6 +103,7 @@ public class UIDialogueScript : MonoBehaviour
 
         textContainer.SetActive(true);
         textUI.text = messageText;
+        PlayNextAudio();
 
         yield return new WaitForSeconds(visibleDuration);
 
@@ -104,5 +115,21 @@ public class UIDialogueScript : MonoBehaviour
             StopCoroutine(activeDialogueRoutine);
 
         activeDialogueRoutine = StartCoroutine(DelayedDialogueRoutine(messageText, preDelaySeconds, visibleDuration));
+    }
+
+    void PlayNextAudio()
+    {
+        if (audioSource == null)
+            return;
+
+        if (nextAudioIndex >= dialogueAudioClips.Count)
+            return;
+
+        AudioClip nextClip = dialogueAudioClips[nextAudioIndex];
+
+        if (nextClip != null)
+            audioSource.PlayOneShot(nextClip);
+
+        nextAudioIndex++;
     }
 }
