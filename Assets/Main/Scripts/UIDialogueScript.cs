@@ -75,6 +75,7 @@ public class UIDialogueScript : MonoBehaviour
     {
         textContainer.SetActive(true);
         textUI.text = entry.messageText;
+        PlayNextAudio();
 
         yield return new WaitForSeconds(entry.visibleDuration);
 
@@ -92,7 +93,6 @@ public class UIDialogueScript : MonoBehaviour
             messageText = messageText,
             visibleDuration = visibleDuration
         };
-        PlayNextAudio();
 
         activeDialogueRoutine = StartCoroutine(ShowDialogueRoutine(entry));
     }
@@ -103,6 +103,7 @@ public class UIDialogueScript : MonoBehaviour
 
         textContainer.SetActive(true);
         textUI.text = messageText;
+
         PlayNextAudio();
 
         yield return new WaitForSeconds(visibleDuration);
@@ -125,11 +126,14 @@ public class UIDialogueScript : MonoBehaviour
         if (nextAudioIndex >= dialogueAudioClips.Count)
             return;
 
-        AudioClip nextClip = dialogueAudioClips[nextAudioIndex];
-
-        if (nextClip != null)
-            audioSource.PlayOneShot(nextClip);
-
+        Debug.Log("Playing audio index: " + nextAudioIndex);
+        AudioClip clipToPlay = dialogueAudioClips[nextAudioIndex];
         nextAudioIndex++;
+
+        if (clipToPlay == null)
+            return;
+
+        audioSource.clip = clipToPlay;
+        audioSource.Play();
     }
 }
