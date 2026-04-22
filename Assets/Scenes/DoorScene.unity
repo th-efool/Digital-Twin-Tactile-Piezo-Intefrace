@@ -947,7 +947,7 @@ Light:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 527553824}
   m_Enabled: 1
-  serializedVersion: 12
+  serializedVersion: 13
   m_Type: 1
   m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
   m_Intensity: 1
@@ -999,7 +999,7 @@ Light:
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
   m_ForceVisible: 0
-  m_ShadowRadius: 0
+  m_ShapeRadius: 0
   m_ShadowAngle: 0
   m_LightUnit: 1
   m_LuxAtDistance: 1
@@ -1681,7 +1681,11 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: d5c39045660bc764a8ef604888042b5b, type: 2}
     - target: {fileID: 1488113632670252145, guid: bf890fb36c0381f4097b469489162642, type: 3}
       propertyPath: moveDuration
-      value: 5
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1488113632670252145, guid: bf890fb36c0381f4097b469489162642, type: 3}
+      propertyPath: highlightDelay
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 1488113632670252145, guid: bf890fb36c0381f4097b469489162642, type: 3}
       propertyPath: currentRobotTile
@@ -3323,6 +3327,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
+  m_UseReflectionProbes: 0
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
