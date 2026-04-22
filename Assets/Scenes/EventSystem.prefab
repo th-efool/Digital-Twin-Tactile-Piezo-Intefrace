@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7724698572491476741}
+  - component: {fileID: 1531641464702654983}
   - component: {fileID: 2272082477250166793}
   - component: {fileID: 7675267627053635343}
   m_Layer: 0
@@ -33,6 +34,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1531641464702654983
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3455197207459269669}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c70c6ad269cd5c7418e67aac22580c9d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PiezoSerialReceiver
+  portName: COM7
+  baudRate: 115200
+  arduinoConnected: 0
+  arduinoStatus: Not Connected
+  lastSensorIndex: -1
 --- !u!114 &2272082477250166793
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -67,6 +85,7 @@ MonoBehaviour:
   m_RepeatRate: 0.1
   m_TrackedDeviceDragThresholdMultiplier: 2
   m_TrackedScrollDeltaMultiplier: 5
+  m_NonTrackedScrollDeltaMultiplier: 6
   m_BypassUIToolkitEvents: 1
   m_ActiveInputMode: 1
   m_EnableXRInput: 1
