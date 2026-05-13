@@ -8,7 +8,7 @@ public class GridMaster : MonoBehaviour
     public Material materialA;
     public Material materialB;
     public UIDialogueScript DialogueGenerator;
-
+    bool isFirstMove = true;
     public GameObject gridObject;
     public GameObject robotObject;
     public float cellSize = 1f;
@@ -337,17 +337,31 @@ public class GridMaster : MonoBehaviour
         GameObject targetGridTile = grid[targetTile];
         Renderer targetRenderer = targetGridTile.GetComponent<Renderer>();
         Vector3 originalScale = targetGridTile.transform.localScale;
+        
 
         // force red highlight
         if (targetRenderer != null)
-            targetRenderer.sharedMaterial = materialA;
+        {
+            if (isFirstMove)
+            {
+                Debug.Log("First Move");
+            }
+            else
+            {
+                targetRenderer.sharedMaterial = materialA;
+                Debug.Log("NOT First Move");
+            }
+        }
 
 
         while (time < moveDuration)
         {
             // pulse animation (sin wave)
-            float pulse = ScaleAnim_sineStartingPoint + Mathf.Sin(Time.time * ScaleAnim_sinefrequency) * ScaleAnim_sineAmplifier;
-            targetGridTile.transform.localScale = originalScale * pulse;
+            if (!isFirstMove)
+            {
+                float pulse = ScaleAnim_sineStartingPoint + Mathf.Sin(Time.time * ScaleAnim_sinefrequency) * ScaleAnim_sineAmplifier;
+                targetGridTile.transform.localScale = originalScale * pulse;
+            }
 
             time += Time.deltaTime;
             float t = Mathf.SmoothStep(0f, 1f, time / moveDuration);
@@ -359,6 +373,7 @@ public class GridMaster : MonoBehaviour
 
             yield return null;
         }
+        isFirstMove = false;
         // restore scale
         targetGridTile.transform.localScale = originalScale;
 
